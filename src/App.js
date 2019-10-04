@@ -1,11 +1,12 @@
 import React from 'react'
-import './components/Todos'
 import './App.css'
-import Todos from './components/Todos'
+import TodoList from './components/TodoList'
+import Header from './components/layout/header'
+import AddTodo from './components/AddTodo'
 
 class App extends React.Component {
   state = {
-    todos: [
+    todoList: [
       {
         id: 1,
         tittle: 'Take out the trash',
@@ -14,7 +15,7 @@ class App extends React.Component {
       {
         id: 2,
         tittle: 'Dinner with wifey',
-        complete: true
+        complete: false
       },
       {
         id: 3,
@@ -23,12 +24,46 @@ class App extends React.Component {
       }
     ]
   }
-  render () {
-    // console.log(this.state.todos)
+  // Toggle complete
+  markComplete = id => {
+    this.setState({
+      todoList: this.state.todoList.map(item => {
+        if (item.id === id) {
+          item.complete = !item.complete
+        }
+        return item
+      })
+    })
+  }
 
+  // Delete Item
+  dltItem = id => {
+    this.setState({
+      todoList: [...this.state.todoList.filter(item => item.id != id)]
+    })
+  }
+  // Add to do
+  addTodo = tittle => {
+    const newTodo = {
+      id: 4,
+      tittle,
+      complete: false
+    }
+
+    this.setState({ todoList: [...this.state.todoList, newTodo] })
+  }
+  render () {
     return (
       <div className='App'>
-        <Todos todos={this.state.todos} />
+        <div className='container'>
+          <Header />
+          <AddTodo addTodo={this.addTodo} />
+          <TodoList
+            todoList={this.state.todoList}
+            markComplete={this.markComplete}
+            dltItem={this.dltItem}
+          />
+        </div>
       </div>
     )
   }
